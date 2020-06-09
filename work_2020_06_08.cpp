@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <list>
+#include <string>
 
 using namespace std;
 
@@ -14,21 +15,24 @@ string get_value(list<string> ls, int index) {
     return *itor;
 }
 
-// 函数功能: 将字符串数字前补0 (小于4位前面自动补0)
-string format_number(string str) {
-    int place = 4;
-    string num = str;
-    if (num.size() < place) {
-        // 需要补上的位数
-        int lack = place - num.size();
-        // 往前追加 0
-        while (lack) {
-            num.insert(0, "0");
-            --lack;
+// 函数功能: 将字符串数字前补0，小于3000
+string format_number(int num) {
+    string str = std::to_string(static_cast<int>(num));
+    // 首先判断是否小于3000
+    if (num < 3000) {
+        int place = 5;  // 最大位数5
+        if (str.size() < place) {
+            // 需要补上的位数
+            int lack = place - str.size();
+            // 往前追加 0
+            while (lack) {
+                str.insert(0, "0");
+                --lack;
+            }
         }
     }
 
-    return num;
+    return str;
 }
 
 // 函数：将一些4, 5, 6位数存入txt文档
@@ -40,11 +44,8 @@ void save_to_file(const string path)
 
     for (int i = 0; i < 50; ++i) {
         // 随机生成0-999999的数字，并转换成字符串类型
-        string num = to_string(rand() % 999999);
-        // 格式化这个数字，前面补0
-        num = format_number(num);
-        // 将数字字符串写入txt文件中
-        out << num << endl;
+        // 然后将数字字符串写入txt文件中
+        out << format_number(rand() % 999999) << endl;
     }
 
     out.close();
